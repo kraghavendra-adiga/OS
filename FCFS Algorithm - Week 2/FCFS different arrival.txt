@@ -1,0 +1,59 @@
+package OS;
+
+import java.util.Scanner;
+
+public class FCFS {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n;
+        float waitavg=0;
+        float tatavg = 0;
+
+        System.out.println("Enter the total no.of processes:");
+        n = sc.nextInt();
+
+        int[] arrival = new int[n];
+        int[] completion = new int[n];
+        int[] burst = new int[n];
+        int[] turnaround = new int[n];
+        int[] waiting = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            System.out.printf("Enter the Arrival time of Process[%d]: ",i+1);
+            arrival[i] = sc.nextInt();
+            System.out.printf("Enter the Burst time of Process[%d]: ",i+1);
+            burst[i] = sc.nextInt();
+        }
+        completion[0] = burst[0];
+        for (int i = 1; i < n; i++) {
+            if(arrival[i]<=completion[i-1]){
+                completion[i] = completion[i-1] + burst[i];
+            }
+            else{
+                completion[i] = arrival[i] + burst[i];
+            }
+        }
+        for(var el: completion){
+            System.out.print(el+" ");
+        }
+        System.out.println();
+        for (int i = 0; i < n; i++) {
+            turnaround[i] = completion[i] - arrival[i];
+            tatavg+=turnaround[i];
+        }
+        for(var el: turnaround){
+            System.out.print(el+" ");
+        }
+        System.out.println();
+        tatavg/=n;
+        for (int i = 0; i < n; i++) {
+            waiting[i] = turnaround[i] - burst[i];
+            waitavg+=waiting[i];
+        }
+        waitavg/=n;
+
+        System.out.println("Average Turn around time is: " + tatavg);
+        System.out.println("Average Waiting time is: " + waitavg);
+
+    }
+}
