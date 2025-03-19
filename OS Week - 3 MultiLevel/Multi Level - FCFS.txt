@@ -1,0 +1,67 @@
+package CS133OSLAb;
+
+import java.util.*;
+
+
+public class MultiLevel {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Map<String, Integer> low = new HashMap<>();
+        Map<String, Integer> high = new HashMap<>();
+
+        HashMap<String, Integer> map = new HashMap<>();
+        HashMap<String, Integer> priortiy = new HashMap<>();
+
+        HashMap<String, Integer> completion = new HashMap<>();
+        System.out.println("Enter the total no.of processes: ");
+        int n = sc.nextInt();
+        for(int i=1; i<=n; i++){
+            System.out.println("Enter the process name: ");
+            String name = sc.next();
+            System.out.println("Enter the process Burst Time: ");
+            int time = sc.nextInt();
+            map.put(name,time);
+            System.out.println("Enter the process priorty: ");
+            int prio = sc.nextInt();
+            priortiy.put(name,prio);
+        }
+        for(var el: priortiy.keySet()){
+            if(priortiy.get(el)==0){
+                low.put(el,map.get(el));
+            }
+            else{
+                high.put(el,map.get(el));
+            }
+        }
+        int comp=0;
+        for(var el: high.keySet()){
+            comp += high.get(el);
+            completion.put(el,comp);
+        }
+        for(var el: low.keySet()){
+            comp += low.get(el);
+            completion.put(el,comp);
+        }
+        float avgtat = 0.0f;
+        float avgwait = 0.0f;
+        for(var el: completion.keySet()){
+            System.out.println("Process name is: " + el + " Completion time is: " + completion.get(el));
+            avgtat+=completion.get(el);
+        }
+
+        HashMap<String, Integer> wait = new HashMap<>();
+
+        for(var el: completion.keySet()){
+            wait.put(el,completion.get(el)-map.get(el));
+        }
+
+        for(var el: wait.keySet()){
+            avgwait+=wait.get(el);
+        }
+
+        System.out.println("Average Turn Around time is: " + avgtat/n);
+        System.out.println("Average Waiting time is: " + avgwait/n);
+
+
+    }
+}
