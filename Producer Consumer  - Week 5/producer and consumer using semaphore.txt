@@ -1,0 +1,85 @@
+#include<stdio.h>
+int mutex,full, empty,rear=-1, front=0, count=0;
+
+void wait(int m){
+    m--;
+}
+
+void signal (int m){
+    m++;
+}
+
+void producer(int buffer[], int n){
+    if(mutex==0){
+        printf("Lock is already obtained by other process\n");
+        return;
+    }
+
+    if(count==n){
+        printf("Buffer is full and hence producer has to wait\n");
+        return;
+    }
+
+    wait(mutex);
+
+    printf("Enter the item to put:\n");
+    scanf("%d", &buffer[++rear]);
+
+    signal(full);
+    wait(empty);
+    signal(mutex);
+    count++;
+
+}
+
+void consumer(int buffer[], int n){
+    if(mutex==0){
+        printf("Lock is already obtained by other process\n");
+        return;
+    }
+
+    if(count==0){
+        printf("Buffer is empty and hence consumer has to wait\n");
+        return;
+    }
+
+    wait(mutex);
+
+    printf("Item Consumed is: %d\n", buffer[front++]);
+
+    wait(full);
+    signal(empty);
+    signal(mutex);
+    count--;
+}
+
+int main(){
+    int n;
+    printf("Enter the size of bounded buffer: \n");
+    scanf("%d", &n);
+    int buffer[n];
+    int choice;
+
+    mutex = 1;
+    full = 0;
+    empty = n;
+
+    printf("1--> Producer\n");
+    printf("2--> Consumer\n");
+    printf("3--> Exit\n");
+
+    while(1){
+        printf("Enter the choice here: \n");
+        scanf("%d", & choice);
+        if(choice==1){
+           producer(buffer,n);
+        }
+        else if(choice ==2){
+            consumer(buffer,n);
+        }
+        else break;
+    }
+
+    return 0;
+
+}
